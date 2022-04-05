@@ -1,0 +1,24 @@
+1. SELECT category.category_name, parent.category_name AS parent_name FROM category LEFT JOIN category parent ON category.parent_category_id=parent.id WHERE category.parent_category_id IS NOT NULL
+
+2. SELECT costumer_code, costumer_name, address, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), birth_date)), "%Y")+0 AS age FROM costumer WHERE DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), birth_date)), "%Y")+0>=30 AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), birth_date)), "%Y")+0<=40
+
+3. SELECT costumer_code, costumer_name, COUNT(costumer.id) AS total_trx FROM costumer JOIN so ON so.costumer_id=costumer.id GROUP BY costumer.id
+
+4. SELECT product.id, product_code, product_name, price, category.category_name FROM product LEFT JOIN category ON category.id=product.category_id
+
+5. SELECT so_no, costumer.costumer_name, trans_date, SUM(so_detail.price*so_detail.qty) AS total_amount FROM so LEFT JOIN costumer ON costumer.id=so.costumer_id JOIN so_detail ON so.id=so_detail.so_id GROUP BY so.id
+
+6. SELECT product_code, product_name, SUM(so_detail.qty) AS total_jual FROM product JOIN so_detail ON so_detail.product_id=product.id GROUP BY product.id ORDER BY SUM(so_detail.qty) DESC
+
+7. SELECT costumer_code, costumer_name, SUM(so_detail.price*so_detail.qty) total_amount FROM costumer LEFT JOIN so ON so.costumer_id=costumer.id JOIN so_detail ON so_detail.so_id=so.id GROUP BY costumer.id ORDER BY SUM(so_detail.price*so_detail.qty) DESC LIMIT 5
+
+8. UPDATE so SET payment='cash' WHERE DATEDIFF(NOW(), trans_date)>7 AND payment='credit'
+
+9. UPDATE so SET so.payment=(SELECT default_payment FROM costumer WHERE costumer.id=so.costumer_id)
+
+10. 
+START TRANSACTION; 
+INSERT INTO `so` (`id`, `so_no`, `costumer_id`, `trans_date`, `payment`) VALUES (NULL, '2300034', '5', '2016-08-20', 'cash');
+
+INSERT INTO `so_detail` (`id`, `product_id`, `qty`, `price`, `discount`, `so_id`) VALUES (NULL, '1', '2', '125000', '0', LAST_INSERT_ID()), (NULL, '3', '1', '320000', '10', LAST_INSERT_ID()), (NULL, '5', '24', '56000', '0', LAST_INSERT_ID());
+COMMIT;
