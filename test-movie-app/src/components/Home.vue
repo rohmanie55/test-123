@@ -77,14 +77,14 @@ export default {
     return {
       movies: [],
       page: 1,
-      search: '',
+      search: 'batman',
       modal: null,
       image: '',
     }
   },
   methods: {
     getMovies() {
-      MovieDataService.getAll(this.page)
+      MovieDataService.getAll(this.page, this.search)
         .then(response => {
           this.movies = [...this.movies,...response.data.Search]
           this.page += 1;
